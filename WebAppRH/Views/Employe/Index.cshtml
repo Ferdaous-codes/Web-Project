@@ -1,0 +1,138 @@
+﻿@model IEnumerable<WebAppRH.Models.Employe>
+@using WebAppRH.Models
+
+@{
+    ViewData["Title"] = "Liste des Utilisateurs";
+    var managers = ViewBag.Managers as IEnumerable<Manager> ?? new List<Manager>();
+}
+
+<h2 class="mb-4">Gestion des Utilisateurs</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Ajouter un utilisateur</a>
+
+<ul class="nav nav-tabs mb-3" id="usersTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="employes-tab" data-bs-toggle="tab"
+                data-bs-target="#employes" type="button" role="tab">
+            Employés <span class="badge bg-primary">@Model.Count()</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="managers-tab" data-bs-toggle="tab"
+                data-bs-target="#managers" type="button" role="tab">
+            Managers <span class="badge bg-success">@managers.Count()</span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    @* TAB EMPLOYÉS *@
+    <div class="tab-pane fade show active" id="employes" role="tabpanel">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">Aucun employé pour le moment.</div>
+        }
+        else
+        {
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom complet</th>
+                        <th>Email</th>
+                        <th>Poste</th>
+                        <th>Département</th>
+                        <th>Manager</th>
+                        <th>Solde Congés</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model)
+                    {
+                        <tr>
+                            <td><span class="badge bg-secondary">#@e.Id</span></td>
+                            <td><strong>@e.Prenom @e.Nom</strong></td>
+                            <td>@e.Email</td>
+                            <td>@e.Poste</td>
+                            <td>@(e.Departement?.Nom ?? "—")</td>
+                            <td>
+                                @if (e.Manager != null)
+                                {
+                                    <span>@e.Manager.Prenom @e.Manager.Nom</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td><span class="badge bg-info">@e.SoldeConge j</span></td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@e.Id"
+                                   class="btn btn-sm btn-outline-info">Détails</a>
+                                <a asp-action="Edit" asp-route-id="@e.Id"
+                                   class="btn btn-sm btn-outline-primary">Modifier</a>
+                                <a asp-action="Delete" asp-route-id="@e.Id"
+                                   class="btn btn-sm btn-outline-danger">Supprimer</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    @* TAB MANAGERS *@
+    <div class="tab-pane fade" id="managers" role="tabpanel">
+        @if (!managers.Any())
+        {
+            <div class="alert alert-info">Aucun manager pour le moment.</div>
+        }
+        else
+        {
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom complet</th>
+                        <th>Email</th>
+                        <th>Département supervisé</th>
+                        <th>Équipe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in managers)
+                    {
+                        <tr>
+                            <td><span class="badge bg-secondary">#@m.Id</span></td>
+                            <td><strong>@m.Prenom @m.Nom</strong></td>
+                            <td>@m.Email</td>
+                            <td>
+                                @if (m.Departement != null)
+                                {
+                                    <span class="badge bg-success">@m.Departement.Nom</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Aucun</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@m.Equipe.Count employé(s)</span>
+                            </td>
+                            <td>
+                                <a asp-action="DetailsManager" asp-route-id="@m.Id"
+                                   class="btn btn-sm btn-outline-info">Détails</a>
+                                <a asp-action="EditManager" asp-route-id="@m.Id"
+                                   class="btn btn-sm btn-outline-primary">Modifier</a>
+                                <a asp-action="DeleteManager" asp-route-id="@m.Id"
+                                   class="btn btn-sm btn-outline-danger">Supprimer</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

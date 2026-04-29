@@ -1,0 +1,50 @@
+﻿@model WebAppRH.Models.DemandeConge
+
+@{
+    ViewData["Title"] = "Modifier une demande de congé";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2 class="mb-4">Modifier la demande de congé</h2>
+
+        <form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="Id" value="@Model.Id" />
+
+            <div class="mb-3">
+                <label class="form-label">Date de début</label>
+                <input type="date" name="DateDebut"
+                       value="@Model.DateDebut.ToString("yyyy-MM-dd")"
+                       class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date de fin</label>
+                <input type="date" name="DateFin"
+                       value="@Model.DateFin.ToString("yyyy-MM-dd")"
+                       class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Type de congé</label>
+                <select name="Type" class="form-control" required>
+                    <option value="Annuel" selected="@(Model.Type == WebAppRH.Models.TypeConge.Annuel)">Annuel</option>
+                    <option value="Maladie" selected="@(Model.Type == WebAppRH.Models.TypeConge.Maladie)">Maladie</option>
+                    <option value="SansSolde" selected="@(Model.Type == WebAppRH.Models.TypeConge.SansSolde)">Sans Solde</option>
+                </select>
+            </div>
+
+            <div class="alert alert-info">
+                <small>
+                    📌 Le statut de la demande ne peut pas être modifié manuellement.
+                    Seul votre manager peut approuver ou refuser une demande.
+                </small>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Enregistrer les modifications</button>
+            <a asp-action="Index" class="btn btn-secondary w-100 mt-2">Annuler</a>
+        </form>
+    </div>
+</div>

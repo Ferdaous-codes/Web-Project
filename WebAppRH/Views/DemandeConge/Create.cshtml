@@ -1,0 +1,42 @@
+﻿@model WebAppRH.Models.DemandeConge
+
+@{
+    ViewData["Title"] = "Nouvelle demande de congé";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2 class="mb-4">Nouvelle demande de congé</h2>
+
+        @if (TempData["Erreur"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Erreur"]</div>
+        }
+
+        <form method="post" asp-action="Create">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label">Date de début</label>
+                <input type="date" name="DateDebut" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date de fin</label>
+                <input type="date" name="DateFin" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Type de congé</label>
+                <select name="Type" class="form-control" required>
+                    <option value="Annuel">Annuel</option>
+                    <option value="Maladie">Maladie</option>
+                    <option value="SansSolde">Sans Solde</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Envoyer la demande</button>
+            <a asp-action="Index" class="btn btn-secondary w-100 mt-2">Annuler</a>
+        </form>
+    </div>
+</div>

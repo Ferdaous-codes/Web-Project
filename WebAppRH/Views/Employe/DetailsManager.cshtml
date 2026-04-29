@@ -1,0 +1,107 @@
+﻿@model WebAppRH.Models.Manager
+@using WebAppRH.Models
+
+@{
+    ViewData["Title"] = "Détails du manager";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>👔 @Model.Prenom @Model.Nom</h2>
+            <a asp-action="Index" class="btn btn-secondary">← Retour à la liste</a>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Informations personnelles</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">ID</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-secondary">#@Model.Id</span>
+                    </dd>
+
+                    <dt class="col-sm-3">Nom</dt>
+                    <dd class="col-sm-9">@Model.Nom</dd>
+
+                    <dt class="col-sm-3">Prénom</dt>
+                    <dd class="col-sm-9">@Model.Prenom</dd>
+
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9">@Model.Email</dd>
+
+                    <dt class="col-sm-3">Département supervisé</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Departement != null)
+                        {
+                            <span class="badge bg-success">@Model.Departement.Nom</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted fst-italic">Aucun département</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Taille de l'équipe</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-info fs-6">@Model.Equipe.Count employé(s)</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">👥 Équipe sous sa responsabilité</h5>
+                <span class="badge bg-primary">@Model.Equipe.Count membre(s)</span>
+            </div>
+            <div class="card-body">
+                @if (Model.Equipe.Any())
+                {
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom complet</th>
+                                <th>Poste</th>
+                                <th>Email</th>
+                                <th>Département</th>
+                                <th>Solde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var e in Model.Equipe)
+                            {
+                                <tr>
+                                    <td><span class="badge bg-secondary">#@e.Id</span></td>
+                                    <td><strong>@e.Prenom @e.Nom</strong></td>
+                                    <td>@e.Poste</td>
+                                    <td>@e.Email</td>
+                                    <td>@(e.Departement?.Nom ?? "—")</td>
+                                    <td><span class="badge bg-info">@e.SoldeConge j</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-info mb-0">
+                        Ce manager n'a pas encore d'employés sous sa responsabilité.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a asp-action="EditManager" asp-route-id="@Model.Id" class="btn btn-primary">
+                ✏️ Modifier
+            </a>
+            <a asp-action="DeleteManager" asp-route-id="@Model.Id" class="btn btn-danger">
+                🗑️ Supprimer
+            </a>
+        </div>
+    </div>
+</div>

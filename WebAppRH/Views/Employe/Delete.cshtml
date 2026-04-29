@@ -1,0 +1,47 @@
+﻿@model WebAppRH.Models.Employe
+
+@{
+    ViewData["Title"] = "Supprimer un employé";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2 class="mb-4 text-danger">⚠️ Confirmer la suppression</h2>
+
+        <div class="alert alert-warning">
+            <strong>Attention :</strong> Cette action est irréversible.
+            Toutes les demandes de congé de cet employé seront également supprimées.
+        </div>
+
+        <table class="table">
+            <tr>
+                <th style="width: 30%;">Nom complet</th>
+                <td>@Model.Prenom @Model.Nom</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>@Model.Email</td>
+            </tr>
+            <tr>
+                <th>Poste</th>
+                <td>@Model.Poste</td>
+            </tr>
+            <tr>
+                <th>Département</th>
+                <td>@(Model.Departement?.Nom ?? "Non assigné")</td>
+            </tr>
+            <tr>
+                <th>Demandes de congé</th>
+                <td>@Model.DemandesConge.Count demande(s)</td>
+            </tr>
+        </table>
+
+        <form method="post" asp-action="Delete" asp-route-id="@Model.Id">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger w-100">
+                🗑️ Confirmer la suppression
+            </button>
+            <a asp-action="Index" class="btn btn-secondary w-100 mt-2">Annuler</a>
+        </form>
+    </div>
+</div>

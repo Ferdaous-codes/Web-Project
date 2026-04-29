@@ -1,0 +1,78 @@
+﻿@model WebAppRH.Models.Departement
+
+@{
+    ViewData["Title"] = "Détails du département";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <h2 class="mb-4">Détails du département</h2>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">@Model.Nom</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Budget</dt>
+                    <dd class="col-sm-9">@Model.Budget.ToString("N2") TND</dd>
+
+                    <dt class="col-sm-3">Responsable</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Responsable != null)
+                        {
+                            <span>@Model.Responsable.Prenom @Model.Responsable.Nom</span>
+                            <br />
+                            <small class="text-muted">@Model.Responsable.Email</small>
+                        }
+                        else
+                        {
+                            <span class="text-muted fst-italic">Non assigné</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Nb. d'employés</dt>
+                    <dd class="col-sm-9">@Model.Employes.Count</dd>
+                </dl>
+            </div>
+        </div>
+
+        <h4>Employés du département</h4>
+        @if (Model.Employes.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Poste</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model.Employes)
+                    {
+                        <tr>
+                            <td>@e.Nom</td>
+                            <td>@e.Prenom</td>
+                            <td>@e.Poste</td>
+                            <td>@e.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">Aucun employé dans ce département.</div>
+        }
+
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+            @if (User.IsInRole("Administrateur"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
+            }
+        </div>
+    </div>
+</div>

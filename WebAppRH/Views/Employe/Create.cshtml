@@ -1,0 +1,147 @@
+﻿@{
+    ViewData["Title"] = "Ajouter un utilisateur";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7">
+        <h2 class="mb-4">Ajouter un utilisateur</h2>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form method="post" asp-action="Create">
+            @Html.AntiForgeryToken()
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Type d'utilisateur</h5>
+                    <select name="typeUtilisateur" id="typeSelect" class="form-control" required>
+                        <option value="Employe">Employé</option>
+                        <option value="Manager">Manager</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Informations personnelles</h5>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input type="text" name="nom" class="form-control" required maxlength="100" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Prénom</label>
+                        <input type="text" name="prenom" class="form-control" required maxlength="100" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe initial</label>
+                        <input type="password" name="motDePasse" class="form-control" minlength="6" required />
+                        <small class="form-text text-muted">Minimum 6 caractères. À communiquer à l'utilisateur.</small>
+                    </div>
+                </div>
+            </div>
+
+            @* Champs spécifiques EMPLOYÉ *@
+            <div id="employeFields" class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Informations professionnelles</h5>
+
+                    <div class="mb-3">
+                        <label class="form-label">Poste</label>
+                        <input type="text" name="poste" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Solde de congés (jours)</label>
+                        <input type="number" name="soldeConge" class="form-control" value="25" min="0" max="365" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Manager</label>
+                        <select name="managerId" class="form-control">
+                            <option value="">-- Aucun manager --</option>
+                            @if (ViewBag.Managers != null)
+                            {
+                                @foreach (var m in ViewBag.Managers)
+                                {
+                                    <option value="@m.Id">@m.Prenom @m.Nom</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Département</h5>
+
+                    <div class="mb-3">
+                        <label class="form-label" id="departementLabel">Département</label>
+                        <select name="departementId" class="form-control">
+                            <option value="">-- Aucun --</option>
+                            @if (ViewBag.Departements != null)
+                            {
+                                @foreach (var d in ViewBag.Departements)
+                                {
+                                    <option value="@d.Id">@d.Nom</option>
+                                }
+                            }
+                        </select>
+                        <small class="form-text text-muted" id="departementHelp">
+                            Département auquel l'employé est rattaché.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Créer l'utilisateur</button>
+            <a asp-action="Index" class="btn btn-secondary w-100 mt-2">Annuler</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const typeSelect = document.getElementById('typeSelect');
+        const employeFields = document.getElementById('employeFields');
+        const departementLabel = document.getElementById('departementLabel');
+        const departementHelp = document.getElementById('departementHelp');
+
+        function toggleFields() {
+            const isManager = typeSelect.value === 'Manager';
+
+            // Cacher les champs spécifiques employé pour les managers
+            employeFields.style.display = isManager ? 'none' : 'block';
+
+            // Adapter le label du département
+            if (isManager) {
+                departementLabel.textContent = 'Département à superviser';
+                departementHelp.textContent = 'Le manager deviendra responsable de ce département.';
+            } else {
+                departementLabel.textContent = 'Département';
+                departementHelp.textContent = 'Département auquel l\'employé est rattaché.';
+            }
+        }
+
+        typeSelect.addEventListener('change', toggleFields);
+        toggleFields();
+    </script>
+}

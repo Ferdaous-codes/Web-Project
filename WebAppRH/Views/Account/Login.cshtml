@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Connexion";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <h2 class="text-center mb-4">Connexion</h2>
+
+        @if (ViewBag.Erreur != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Erreur</div>
+        }
+
+        <form method="post" asp-action="Login">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mot de passe</label>
+                <input type="password" name="motDePasse" class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+        </form>
+
+        <div class="text-center mt-3 text-muted">
+            <small>
+                <strong>Pas encore de compte ?</strong><br />
+                Contactez votre administrateur RH pour obtenir vos identifiants.
+            </small>
+        </div>
+    </div>
+</div>
