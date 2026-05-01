@@ -361,3 +361,28 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# ===== .NET =====
+**/bin/
+**/obj/
+*.user
+*.suo
+.vs/
+
+# ===== Angular / Node =====
+**/node_modules/
+**/dist/
+**/.angular/
+*.log
+*.tsbuildinfo
+
+# ===== IDE =====
+.vscode/
+.idea/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Secrets =====
+appsettings.Development.json
+appsettings.Production.json
